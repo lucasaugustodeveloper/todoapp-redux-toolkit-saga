@@ -1,5 +1,5 @@
-import counterSlice from './counterSlice'
+import todoSlice from './todoSlice'
 
 export default {
-  counter: counterSlice
+  todo: todoSlice
 }

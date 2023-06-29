@@ -3,11 +3,12 @@ import {
   CheckOutlined,
   EditOutlined
 } from '@ant-design/icons'
-import { ulid } from 'ulid'
+import { useSelector } from 'react-redux'
 
 import Footer from '../../components/Footer'
 import Header from '../../components/Header'
 import Search from '../../components/Search'
+import { TodoProps } from '../../store/reducers/todoSlice'
 
 import {
   contentContainer,
@@ -19,34 +20,9 @@ import {
 
 const { Content } = Layout
 
-const mockTodoList = [
-  {
-    id: ulid(),
-    title: 'Learn English',
-    description: 'search audio, podcasts and books in english',
-    done: true,
-  },
-  {
-    id: ulid(),
-    title: 'Learn DevOps',
-    description: 'search articles for dev ops',
-    done: false,
-  },
-  {
-    id: ulid(),
-    title: 'Learn AWS',
-    description: 'search articles and courses for AWS',
-    done: false,
-  },
-  {
-    id: ulid(),
-    title: 'Learn GO',
-    description: 'search articles, courses for go',
-    done: false,
-  },
-]
-
 function App() {
+  const state = useSelector<{ todo: TodoProps[] }>((state) => state.todo)
+
   const handleDone = item => {
     console.log('handleDone', item);
   }
@@ -74,8 +50,8 @@ function App() {
               <Col span={24}>
                 <List
                   itemLayout='horizontal'
-                  dataSource={mockTodoList}
-                  renderItem={(item, index) => (
+                  dataSource={state}
+                  renderItem={(item: TodoProps, index) => (
                     <List.Item>
                       <List.Item.Meta
                         avatar={
