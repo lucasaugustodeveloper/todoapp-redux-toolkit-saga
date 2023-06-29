@@ -1,14 +1,27 @@
-import { Avatar, Button, Col, Layout, List, Row, Space } from 'antd'
+import {
+  Avatar,
+  Button,
+  Col,
+  Layout,
+  List,
+  Row,
+  Space
+} from 'antd'
 import {
   CheckOutlined,
-  EditOutlined
+  DeleteOutlined
 } from '@ant-design/icons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { remove } from '../../store/reducers/todoSlice'
 
 import Footer from '../../components/Footer'
 import Header from '../../components/Header'
 import Search from '../../components/Search'
-import { TodoProps } from '../../store/reducers/todoSlice'
+
+import {
+  done,
+  TodoProps
+} from '../../store/reducers/todoSlice'
 
 import {
   contentContainer,
@@ -21,13 +34,15 @@ import {
 const { Content } = Layout
 
 function App() {
-  const state = useSelector<{ todo: TodoProps[] }>((state) => state.todo)
+  const dispatch = useDispatch()
+  const state = useSelector((state) => state.todo)
 
-  const handleDone = item => {
-    console.log('handleDone', item);
+  const handleDone = (item: TodoProps) => {
+    dispatch(done(item))
   }
-  const handleEdit = item => {
-    console.log('handleEdit', item);
+
+  const handleDelete = (item: TodoProps) => {
+    dispatch(remove(item.id))
   }
 
   return (
@@ -51,7 +66,7 @@ function App() {
                 <List
                   itemLayout='horizontal'
                   dataSource={state}
-                  renderItem={(item: TodoProps, index) => (
+                  renderItem={(item, index) => (
                     <List.Item>
                       <List.Item.Meta
                         avatar={
@@ -79,8 +94,8 @@ function App() {
                           type="default"
                           shape="circle"
                           size='large'
-                          icon={<EditOutlined />}
-                          onClick={() => handleEdit(item)}
+                          icon={<DeleteOutlined />}
+                          onClick={() => handleDelete(item)}
                         />
                       </List.Item>
                     </List.Item>
