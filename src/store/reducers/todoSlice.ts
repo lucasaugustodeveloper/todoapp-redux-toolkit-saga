@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { ulid } from 'ulid'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { RootState } from '..';
 
@@ -10,49 +9,42 @@ export type TodoProps = {
   done: boolean,
 }
 
-const initialState: TodoProps[] = [
-  {
-    id: ulid(),
-    title: 'Learn English',
-    description: 'search audio, podcasts and books in english',
-    done: true,
-  },
-  {
-    id: ulid(),
-    title: 'Learn DevOps',
-    description: 'search articles for dev ops',
-    done: false,
-  },
-  {
-    id: ulid(),
-    title: 'Learn AWS',
-    description: 'search articles and courses for AWS',
-    done: false,
-  },
-  {
-    id: ulid(),
-    title: 'Learn GO',
-    description: 'search articles, courses for go',
-    done: false,
-  },
-]
+const initialState: TodoProps[] = []
 
 export const todoSlice = createSlice({
   name: 'todo',
   initialState,
   reducers: {
-    increment: state => {
-      console.log('add todo:', state)
-      return state
+    increment: (state, action: PayloadAction<TodoProps>) => {
+      const { payload } = action;
+      const data = { ...payload, done: false }
+
+      state.push(data)
     },
-    done: state => {
-      console.log('done todo:', state)
-      return state
+    done: (state, action: PayloadAction<TodoProps>) => {
+      const { payload } = action
+
+      const data = state.map(item => {
+        if (item.id === payload.id) {
+          return { ...item, done: true }
+        }
+
+        return item
+      })
+
+      return state = data
     },
+    remove: (state, action: PayloadAction<string>) => {
+      const id = action.payload
+    
+      const newState = state.filter(item => item.id !== id)
+
+      return state = newState
+    }
   }
 })
 
-export const { increment, done } = todoSlice.actions
+export const { increment, done, remove } = todoSlice.actions
 export const selectTodo = (state: RootState) => state.todo
 
 export default todoSlice.reducer
